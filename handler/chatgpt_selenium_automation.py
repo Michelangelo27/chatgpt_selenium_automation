@@ -74,6 +74,7 @@ class ChatGPTAutomation:
         input_box = self.driver.find_element(by=By.XPATH, value='//textarea[contains(@placeholder, "Send a message")]')
         self.driver.execute_script(f"arguments[0].value = '{prompt}';", input_box)
         input_box.send_keys(Keys.RETURN)
+        input_box.submit()
         time.sleep(20)
 
 
