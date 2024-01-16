@@ -7,6 +7,12 @@ import socket
 import threading
 import os
 
+from selenium.webdriver.chrome.service import Service
+from selenium.webdriver.chrome.options import Options
+from webdriver_manager.chrome import ChromeDriverManager
+from bs4 import BeautifulSoup
+
+
 
 
 class ChatGPTAutomation:
@@ -25,7 +31,8 @@ class ChatGPTAutomation:
         self.chrome_path = chrome_path
         self.chrome_driver_path = chrome_driver_path
 
-        url = r"https://chat.openai.com"
+        # url = r"https://chat.openai.com"
+        url = r"https://chat.openai.com/g/g-pGibIwKEi-gpt-4-rag"
         free_port = self.find_available_port()
         self.launch_chrome_with_remote_debugging(free_port, url)
         self.wait_for_human_verification()
@@ -63,7 +70,9 @@ class ChatGPTAutomation:
 
         chrome_options = webdriver.ChromeOptions()
         chrome_options.add_experimental_option("debuggerAddress", f"127.0.0.1:{port}")
-        driver = webdriver.Chrome(executable_path=self.chrome_driver_path, options=chrome_options)
+        # driver = webdriver.Chrome(executable_path=self.chrome_driver_path, options=chrome_options)
+        driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()),
+                                  options=chrome_options)
         return driver
 
 
@@ -71,11 +80,13 @@ class ChatGPTAutomation:
     def send_prompt_to_chatgpt(self, prompt):
         """ Sends a message to ChatGPT and waits for 20 seconds for the response """
 
-        input_box = self.driver.find_element(by=By.XPATH, value='//textarea[contains(@placeholder, "Send a message")]')
+        # input_box = self.driver.find_element(by=By.XPATH, value='//textarea[contains(@placeholder, "Message ChatGPT...")]')
+        input_box = self.driver.find_element(By.ID, "prompt-textarea")
         self.driver.execute_script(f"arguments[0].value = '{prompt}';", input_box)
         input_box.send_keys(Keys.RETURN)
         input_box.submit()
-        time.sleep(20)
+        # print("---SLEEPING---")
+        # time.sleep(100)
 
 
 
@@ -117,6 +128,17 @@ class ChatGPTAutomation:
         """ :return: the text of the last chatgpt response """
 
         response_elements = self.driver.find_elements(by=By.CSS_SELECTOR, value='div.text-base')
+        html_content = response_elements[-1].get_attribute("outerHTML")
+        print(html_content)
+        print("---SLEEPING---")
+        # time.sleep(20)
+        soup = BeautifulSoup(html_content, 'html.parser')
+        a_tags = soup.find_all('a')
+        url_links = [a.get('href') for a in a_tags if a.has_attr('href')]
+        print("-------URL LINKS-------")
+        print(url_links)
+        # print("---SLEEPING---")
+        # time.sleep(100)
         return response_elements[-1].text
 
 
@@ -144,7 +166,5 @@ class ChatGPTAutomation:
         print("Closing the browser...")
         self.driver.close()
         self.driver.quit()
-
-
 
 
