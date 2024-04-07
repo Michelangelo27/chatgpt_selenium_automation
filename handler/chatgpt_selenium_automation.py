@@ -29,6 +29,7 @@ class ChatGPTAutomation:
         self.launch_chrome_with_remote_debugging(free_port, url)
         self.wait_for_human_verification()
         self.driver = self.setup_webdriver(free_port)
+        self.cookie = self.get_cookie()
 
     @staticmethod
     def find_available_port():
@@ -60,6 +61,14 @@ class ChatGPTAutomation:
         chrome_options.add_experimental_option("debuggerAddress", f"127.0.0.1:{port}")
         driver = webdriver.Chrome(options=chrome_options)
         return driver
+    
+    def get_cookie(self):
+        """
+        Get chat.openai.com cookie from the running chrome instance.
+        """
+        cookies = self.driver.get_cookies()
+        cookie = [elem for elem in cookies if elem["name"]=='__Secure-next-auth.session-token'][0]['value']
+        return cookie
 
     def send_prompt_to_chatgpt(self, prompt):
         """ Sends a message to ChatGPT and waits for 20 seconds for the response """
