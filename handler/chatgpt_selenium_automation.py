@@ -132,7 +132,7 @@ class ChatGPTAutomation:
 
         while True:
             user_input = input(
-                "Enter 'y' if you have completed the log-in or the human verification, or 'n' to check again: ").lower()
+                "Enter 'y' if you have completed the log-in or the human verification, or 'n' to check again: ").lower().strip()
 
             if user_input == 'y':
                 print("Continuing with the automation process...")
