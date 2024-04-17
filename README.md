@@ -12,7 +12,7 @@ ChatGPT Automation is a Python project that aims to automate interactions with O
 ## Example Usage
 
  ```python
-from chatgpt_selenium_automation.chatgpt_selenium_automation import ChatGPTAutomation
+from chatgpt_selenium_automation.handler import ChatGPTAutomation
 
 # Define the path where the chrome driver is installed on your computer
 chrome_driver_path = r"C:\Users\user\Desktop\chromedriver.exe"
