@@ -61,13 +61,13 @@ class ChatGPTAutomation:
         chrome_options.add_experimental_option("debuggerAddress", f"127.0.0.1:{port}")
         driver = webdriver.Chrome(options=chrome_options)
         return driver
-    
+
     def get_cookie(self):
         """
         Get chat.openai.com cookie from the running chrome instance.
         """
         cookies = self.driver.get_cookies()
-        cookie = [elem for elem in cookies if elem["name"]=='__Secure-next-auth.session-token'][0]['value']
+        cookie = [elem for elem in cookies if elem["name"] == '__Secure-next-auth.session-token'][0]['value']
         return cookie
 
     def send_prompt_to_chatgpt(self, prompt):
@@ -77,7 +77,18 @@ class ChatGPTAutomation:
         self.driver.execute_script(f"arguments[0].value = '{prompt}';", input_box)
         input_box.send_keys(Keys.RETURN)
         input_box.submit()
-        time.sleep(20)
+        self.check_response_ended()
+
+    def check_response_ended(self):
+        """ Checks if ChatGPT response ended """
+        start_time = time.time()
+        while len(self.driver.find_elements(by=By.CSS_SELECTOR, value='div.text-base')[-1].find_elements(
+                by=By.CSS_SELECTOR, value='button.text-token-text-tertiary')) < 1:
+            time.sleep(0.5)
+            # Exit the while loop after 30 seconds anyway
+            if time.time() - start_time > 30:
+                break
+        time.sleep(1)  # the length should be =4, so it's better to wait a moment to be sure it's really finished
 
     def return_chatgpt_conversation(self):
         """
@@ -121,7 +132,7 @@ class ChatGPTAutomation:
 
         while True:
             user_input = input(
-                "Enter 'y' if you have completed the log-in or the human verification, or 'n' to check again: ").lower()
+                "Enter 'y' if you have completed the log-in or the human verification, or 'n' to check again: ").lower().strip()
 
             if user_input == 'y':
                 print("Continuing with the automation process...")
