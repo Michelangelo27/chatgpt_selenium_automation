@@ -86,7 +86,7 @@ class ChatGPTAutomation:
                 by=By.CSS_SELECTOR, value='button.text-token-text-tertiary')) < 1:
             time.sleep(0.5)
             # Exit the while loop after 30 seconds anyway
-            if time.time() - start_time > 30:
+            if time.time() - start_time > 60:
                 break
         time.sleep(1)  # the length should be =4, so it's better to wait a moment to be sure it's really finished
 
