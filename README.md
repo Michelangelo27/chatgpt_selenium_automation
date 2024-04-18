@@ -5,7 +5,7 @@ ChatGPT Automation is a Python project that aims to automate interactions with O
 
 ## Prerequisites
 
-1. Make sure you have installed the required libraries, as specified in the `requirements.txt` file.
+1. Install the library with the command: pip install git+https://github.com/Michelangelo27/chatgpt_selenium_automation.git
 2. Download the appropriate version of `chromedriver.exe` and save it to a known location on your system.
 
 
