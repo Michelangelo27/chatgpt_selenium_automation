@@ -18,7 +18,7 @@ class ChatGPTAutomation:
         3. Connect a Selenium WebDriver to the browser instance after human verification is completed.
 
         :param chrome_path: file path to chrome.exe (ex. C:\\Users\\User\\...\\chromedriver.exe)
-        :param chrome_driver_path: file path to chrome.exe (ex. C:\\Users\\User\\...\\chromedriver.exe)
+        :param chrome_driver_path: file path to chromedriver.exe (ex. C:\\Users\\User\\...\\chromedriver.exe)
         """
 
         self.chrome_path = chrome_path
@@ -85,7 +85,7 @@ class ChatGPTAutomation:
         while len(self.driver.find_elements(by=By.CSS_SELECTOR, value='div.text-base')[-1].find_elements(
                 by=By.CSS_SELECTOR, value='button.text-token-text-tertiary')) < 1:
             time.sleep(0.5)
-            # Exit the while loop after 30 seconds anyway
+            # Exit the while loop after 60 seconds anyway
             if time.time() - start_time > 60:
                 break
         time.sleep(1)  # the length should be =4, so it's better to wait a moment to be sure it's really finished
